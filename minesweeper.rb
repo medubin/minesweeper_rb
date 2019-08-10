@@ -6,7 +6,7 @@ class MineSweeper
     def initialize
         @playing = true
         size = 35
-        @board = Board.new(size, 20)
+        @board = Board.new(size, 90)
         @graphics = Graphics.new(size)
         Window.on :mouse_down do |event|
             return if !@playing
