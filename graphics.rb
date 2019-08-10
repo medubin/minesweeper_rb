@@ -14,6 +14,7 @@ class Graphics
     }
     def initialize(size)
         last = size * TILE
+        @size = size
         @flags = {}
         size.times do |coord|
             pos = coord * TILE
@@ -48,5 +49,13 @@ class Graphics
         else
             @flags[[x,y]] = Text.new('P', x: x * TILE + 4, y: y * TILE - 2, size: TILE, color: 'red', z: 3)
         end
+    end
+
+    def lose 
+        Text.new('You Lose', x:@size  , y: (@size * TILE / 2) - @size * 4, size: @size* 4, color: 'red', z: 4)
+    end
+
+    def win 
+        Text.new('You Win', x:@size  , y: (@size * TILE / 2) - @size * 4, size: @size* 4, color: 'red', z: 4)
     end
 end

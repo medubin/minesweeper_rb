@@ -3,7 +3,9 @@ require 'set'
 # 0 - 8: number of bombs
 # -1: a bomb
 class Board
+    attr_reader :to_reveal
     def initialize size, bomb_count
+        @to_reveal = size * size - bomb_count
         @grid = Array.new(size) { Array.new(size) {Tile.new(0)} }
         while bomb_count > 0
             x,y = rand(size), rand(size)
@@ -34,6 +36,7 @@ class Board
             next if !tile.hidden || tile.flag
             tile.hidden = false
             revealed << { x: processing[:x], y: processing[:y], val:tile.val }
+            @to_reveal -= 1
             next if tile.val != 0
             get_neighbors(processing[:x], processing[:y]).each do |coord|
                 x, y = coord[:x], coord[:y]
@@ -47,6 +50,17 @@ class Board
     def toggle_flag(x, y)
         @grid[y][x].flag = !@grid[y][x].flag 
         return @grid[y][x].flag
+    end
+
+    def get_bombs
+        bombs = []
+        @grid.each_index do |y|
+            @grid[y].each_index do |x|
+                tile = @grid[y][x]
+                bombs << { x: x, y: y, val:tile.val } if tile.val == -1 && tile.hidden
+            end
+        end
+        bombs
     end
 
 
