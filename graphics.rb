@@ -1,6 +1,17 @@
 require 'ruby2d'
 class Graphics
     TILE = 20
+    COLORS = {
+        -1 => 'red',
+        1 => 'blue',
+        2 => 'olive',
+        3 => 'maroon',
+        4 => 'navy',
+        5 => 'brown',
+        6 => 'black',
+        7 => 'black',
+        8 => 'black'
+    }
     def initialize(size)
         last = size * TILE
         size.times do |coord|
@@ -17,7 +28,9 @@ class Graphics
         tiles.each do |tile|
             Square.new( x: tile[:x] * TILE, y: tile[:y] * TILE, size: TILE, color: 'gray', z: 2)
             if (tile[:val] != 0)
-                Text.new(tile[:val], x: tile[:x] * TILE + 4, y: tile[:y] * TILE - 2, size: TILE, color: 'black', z: 3)
+                text = tile[:val] != -1 ? tile[:val] : 'X'
+                color = COLORS[tile[:val]]
+                Text.new(text, x: tile[:x] * TILE + 4, y: tile[:y] * TILE - 2, size: TILE, color: color, z: 3)
             end
 
         end 
