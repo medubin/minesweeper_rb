@@ -10,18 +10,13 @@ class Board
             if @grid[y][x].val != -1
                 @grid[y][x].val = -1
                 bomb_count -= 1
-                [-1, 0, 1].each do |y_p|
-                    [-1, 0, 1].each do |x_p|
-                        new_y = y + y_p
-                        new_x = x + x_p
-                        next if out_of_bounds?(new_x, new_y)
-                        next if @grid[new_y][new_x].val == -1
-                        @grid[new_y][new_x].val += 1
-                    end
+                get_neighbors(x, y).each do |coord|
+                    next if out_of_bounds?(coord[:x], coord[:y])
+                    next if @grid[coord[:y]][coord[:x]].val == -1
+                    @grid[coord[:y]][coord[:x]].val += 1
                 end
             end
         end
-
         render()
     end
 
@@ -42,13 +37,10 @@ class Board
             tile.hidden = false
             revealed << { x: processing[:x], y: processing[:y], val:tile.val }
             next if tile.val != 0
-            [-1, 0, 1].each do |y_p|
-                [-1, 0, 1].each do |x_p|
-                    x = processing[:x] + x_p
-                    y = processing[:y] + y_p
-                    next if out_of_bounds?(x, y)
-                    to_process << {tile: @grid[y][x], x: x, y: y} 
-                end
+            get_neighbors(processing[:x], processing[:y]).each do |coord|
+                x, y = coord[:x], coord[:y]
+                next if out_of_bounds?(x, y)
+                to_process << {tile: @grid[y][x], x: x, y: y} 
             end
         end
         return revealed
@@ -66,19 +58,18 @@ class Board
 
 
     private
-
     def out_of_bounds?(x, y)
         size = @grid.length
          return y < 0 || y >= size || x < 0 || x >= size
     end
 
-
-        # def [](x, y)
-        #     @grid[y][x]
-        # end
-
-        # def []= (x, y, val)
-        #     @grid[x,y] = val 
-        # end
-
+    def get_neighbors x, y
+        neighbors = []
+        [-1, 0, 1].each do |y_p|
+            [-1, 0, 1].each do |x_p|
+                neighbors << {x: x + x_p, y: y + y_p}
+            end
+        end
+        neighbors
+    end
 end
