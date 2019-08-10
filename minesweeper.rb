@@ -10,9 +10,14 @@ class MineSweeper
         Window.on :mouse_down do |event|
             x_tile =  event.x / Graphics::TILE
             y_tile =  event.y / Graphics::TILE
-            puts "#{x_tile}, #{y_tile}"
-            tiles =  @board.on_click(x_tile, y_tile)
-            @graphics.reveal(tiles)
+            case event.button
+            when :left
+                tiles =  @board.on_click(x_tile, y_tile)
+                @graphics.reveal(tiles)
+            when :right
+                @board.toggle_flag(x_tile, y_tile)
+                @graphics.toggle_flag(x_tile, y_tile)
+            end
         end
         @graphics.show
     end

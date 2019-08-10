@@ -17,12 +17,10 @@ class Board
                 end
             end
         end
-        render()
     end
 
     def on_click(x, y)
         return [] if !@grid[y][x].hidden
-
         seen = Set.new
         revealed = []
         to_process = [ {tile: @grid[y][x], x: x, y: y} ]
@@ -33,7 +31,7 @@ class Board
             next if seen.include?(coords)
             seen << [processing[:x], processing[:y]]
             tile = processing[:tile]
-            next if !tile.hidden
+            next if !tile.hidden || tile.flag
             tile.hidden = false
             revealed << { x: processing[:x], y: processing[:y], val:tile.val }
             next if tile.val != 0
@@ -46,15 +44,11 @@ class Board
         return revealed
     end
 
-
-    def render
-        @grid.each do |row|
-            row.each do |el|
-                print (el == -1) ? ' x ' : " #{el.val} "
-            end
-            puts
-        end
+    def toggle_flag(x, y)
+        @grid[y][x].flag = !@grid[y][x].flag 
+        return @grid[y][x].flag
     end
+
 
 
     private
@@ -71,5 +65,14 @@ class Board
             end
         end
         neighbors
+    end
+
+    def render
+        @grid.each do |row|
+            row.each do |el|
+                print (el == -1) ? ' x ' : " #{el.val} "
+            end
+            puts
+        end
     end
 end

@@ -14,6 +14,7 @@ class Graphics
     }
     def initialize(size)
         last = size * TILE
+        @flags = {}
         size.times do |coord|
             pos = coord * TILE
             Line.new(x1: 0, y1: pos, x2: last, y2: pos, width: 1, color: 'black', z: 1)
@@ -38,5 +39,14 @@ class Graphics
 
     def show
         Window.show
+    end
+
+    def toggle_flag(x, y)
+        if @flags[[x, y]]
+            @flags[[x,y]].remove
+            @flags[[x,y]] = nil
+        else
+            @flags[[x,y]] = Text.new('P', x: x * TILE + 4, y: y * TILE - 2, size: TILE, color: 'red', z: 3)
+        end
     end
 end
